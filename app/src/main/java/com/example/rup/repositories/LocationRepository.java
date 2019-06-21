@@ -69,7 +69,7 @@ public class LocationRepository {
         return mIsDataLoadingError;
     }
 
-    public void insert (List<Location> word) {
+    public void bulkInsert (List<Location> word) {
         new insertAsyncTask(mLocationDao).execute(word);
     }
 
@@ -90,7 +90,7 @@ public class LocationRepository {
                             //videoListAdapter.updateList(response.body().getItems());
                             //mObservableLocationList.setValue(response.body().getLocations());
 
-                            insert(response.body().getLocations());
+                            bulkInsert(response.body().getLocations());
 
                             Log.d("cnrrrs",response.toString() + response.body().getCustName());
 
@@ -107,8 +107,8 @@ public class LocationRepository {
                     public void onError(Throwable e) {
 //                        //todo handle errors
 //                        viewModelNonUIChangesListener.errorOccurred();
-//                        toastMessage.setValue(new Event<>("Something has gone wrong"));
-                        Log.d("cnrr",e.toString());
+                        toastMessage.setValue(new Event<>("You are offline. Enjoy your cache."));
+                        Log.d("cnrre",e.toString());
 
                     }
                 });

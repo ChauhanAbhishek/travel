@@ -67,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements LocationOnClickLi
                 if(locationList!=null)
                 {
                     locationListAdapter.updateList(locationList);
+                    if(locationList.size()>0)
+                    {
+                        setName();
+                    }
                 }
             }
         });
@@ -108,8 +112,7 @@ public class MainActivity extends AppCompatActivity implements LocationOnClickLi
             @Override
             public void onChanged(@Nullable String customerName) {
                 Log.d("cnrr","cust name " + customerName);
-                activityMainBinding.setName("Hi Rohit");
-                activityMainBinding.setLabel("Welcome to TravelMate");
+                setName();
             }
         });
 
@@ -135,6 +138,12 @@ public class MainActivity extends AppCompatActivity implements LocationOnClickLi
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    public void setName()
+    {
+        activityMainBinding.setName(getResources().getString(R.string.testing));
+        activityMainBinding.setLabel("Welcome to TravelMate");
     }
 
     @Override
