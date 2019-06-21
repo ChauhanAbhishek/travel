@@ -1,59 +1,132 @@
 package com.example.rup;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.rup.adapters.LocationListAdapter;
+import com.example.rup.databinding.ActivityMainBinding;
 import com.example.rup.models.Location;
-import com.example.rup.models.Travel;
-import com.example.rup.repositories.MarvelRepository;
 import com.example.rup.viewmodels.LocationListViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.List;
 
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableSingleObserver;
-import io.reactivex.schedulers.Schedulers;
-import retrofit2.Response;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationOnClickListener{
 
     private LocationListViewModel locationListViewModel;
     private LiveData<String> customerName;
     LiveData<List<Location>> locationLiveData;
     LiveData<Event<String>> toastMessage;
     LiveData<Event<Boolean>> isReqSentEvent;
- //   LocationListViewModel locationListViewModel;
+
+    LocationListAdapter locationListAdapter;
+
+    ActivityMainBinding activityMainBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        activityMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+
+        locationListViewModel  = ViewModelProviders.of(this).get(LocationListViewModel.class);
+
+        RecyclerView rvLocaitons = activityMainBinding.rvLocaitons;
+        rvLocaitons.setLayoutManager(new LinearLayoutManager(this,
+                RecyclerView.VERTICAL, false));
+        locationListAdapter = new LocationListAdapter(locationListViewModel,this,this);
+        rvLocaitons.setAdapter(locationListAdapter);
+
+        locationLiveData = locationListViewModel.getmObservableLocationList();
+        toastMessage = locationListViewModel.getToastMessage();
+        isReqSentEvent = locationListViewModel.getIsReqSent();
+        customerName = locationListViewModel.getmObservableCustomerName();
+        locationLiveData.observe(this, new Observer<List<Location>>() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onChanged(@Nullable List<Location> locationList) {
+                Log.d("cnrr","changed" + locationList);
+                if(locationList!=null)
+                {
+                    locationListAdapter.updateList(locationList);
+                }
             }
         });
 
-        LocationListViewModel locationListViewModel  = ViewModelProviders.of(this).get(LocationListViewModel.class);
+        toastMessage.observe(this, new Observer<Event<String>>() {
+            @Override
+            public void onChanged(@Nullable Event<String> event) {
+                Log.d("cnrrr","changed " + "event");
+                if(event!=null)
+                {
+                    Toast.makeText(MainActivity.this,event.getContentIfNotHandled(),Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
-        locationListViewModel.getLocationList("5c261ccb3000004f0067f6ec");
+        isReqSentEvent.observe(this, new Observer<Event<Boolean>>() {
+            @Override
+            public void onChanged(@Nullable Event<Boolean> isReqSent) {
+                Log.d("cnrrr","reqsent " + isReqSent);
+                Boolean req = isReqSent.getContentIfNotHandled();
+                if(req==null)
+                {
+                    return;
+                }
+//                if(req)
+//                {
+//                    Item item = new Item();
+//                    videoListAdapter.addItem(item);
+//                }
+//                else
+//                {
+//                    videoListAdapter.removeItem();
+//                }
+
+            }
+        });
+
+        customerName.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String customerName) {
+                Log.d("cnrr","cust name " + customerName);
+                activityMainBinding.setName("Hi Rohit");
+                activityMainBinding.setLabel("Welcome to TravelMate");
+            }
+        });
+
+
+
+        if(locationLiveData.getValue()==null)
+        {
+            Log.d("cnrr","it is null");
+            locationListViewModel.getLocationList("5c261ccb3000004f0067f6ec");
+        }
+
+
+
+//
+//        LocationListViewModel locationListViewModel  = ViewModelProviders.of(this).get(LocationListViewModel.class);
+//
+//        locationListViewModel.getLocationList("");
 
     }
 
@@ -79,5 +152,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void openLocation(Location location) {
 
+        Intent i = new Intent(this, LocationDetailActivity.class);
+        i.putExtra("location_object", location);
+
+        startActivity(i);
+
+    }
 }
