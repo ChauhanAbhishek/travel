@@ -3,6 +3,7 @@ package com.example.rup;
 import android.os.Bundle;
 
 import com.example.rup.models.Travel;
+import com.example.rup.repositories.MarvelRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,8 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        MarvelRepository marvelRepository = RupApplication.getInstance().getApplicationComponent().marvelReposotory();
+        marvelRepository.getTravelLocations("5c261ccb3000004f0067f6ec");
     }
 
     @Override

@@ -1,6 +1,10 @@
 
 package com.example.rup.models;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -31,5 +35,10 @@ public class Travel {
         this.locations = locations;
     }
 
+    @NonNull
+    @Override
+    public String toString() {
 
+        return custName + " " + locations;
+    }
 }

@@ -112,10 +112,9 @@ public class NetworkModule {
 
     @ApplicationScope
     @Provides
-    OkHttpClient okHttpClient(Cache cache,@Named ("offline") Interceptor offlineInterceptor,@Named ("online")Interceptor networkInterceptor,Context context) {
+    OkHttpClient okHttpClient(Cache cache,@Named ("offline") Interceptor offlineInterceptor,@Named ("online")Interceptor networkInterceptor,HttpLoggingInterceptor httpLoggingInterceptor,Context context) {
         return new OkHttpClient.Builder()
-                .addInterceptor(offlineInterceptor)
-                .addNetworkInterceptor(networkInterceptor)
+                .addNetworkInterceptor(httpLoggingInterceptor)
                 .cache(cache)
                 .build();
     }
@@ -138,7 +137,7 @@ public class NetworkModule {
     @ApplicationScope
     Retrofit retrofit(OkHttpClient okHttpClient,ObjectMapper objectMapper) {
         return new Retrofit.Builder()
-                .baseUrl("https://www.googleapis.com/youtube/")
+                .baseUrl("http://www.mocky.io/v2/")
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
                 .client(okHttpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

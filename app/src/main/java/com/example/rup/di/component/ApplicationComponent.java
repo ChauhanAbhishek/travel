@@ -15,8 +15,5 @@ import dagger.Component;
 @ApplicationScope
 @Component(modules = {NetworkModule.class, DataModule.class, RepositoryModule.class})
 public interface ApplicationComponent {
-    ApiService apiService();
-    PrefUtils prefUtils();
-    Picasso picasso();
     MarvelRepository marvelReposotory();
 }

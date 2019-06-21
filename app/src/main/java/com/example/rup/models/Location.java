@@ -2,6 +2,8 @@
 package com.example.rup.models;
 
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -63,6 +65,12 @@ public class Location {
         this.description = description;
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+
+        return place + " " + url + " " + date + " " + rate;
+    }
 
 
 }
