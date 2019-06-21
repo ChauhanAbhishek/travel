@@ -2,17 +2,23 @@ package com.example.rup;
 
 import android.os.Bundle;
 
+import com.example.rup.models.Location;
 import com.example.rup.models.Travel;
 import com.example.rup.repositories.MarvelRepository;
+import com.example.rup.viewmodels.LocationListViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -22,7 +28,12 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    private LocationListViewModel locationListViewModel;
+    private LiveData<String> customerName;
+    LiveData<List<Location>> locationLiveData;
+    LiveData<Event<String>> toastMessage;
+    LiveData<Event<Boolean>> isReqSentEvent;
+ //   LocationListViewModel locationListViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +51,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        MarvelRepository marvelRepository = RupApplication.getInstance().getApplicationComponent().marvelReposotory();
-        marvelRepository.getTravelLocations("5c261ccb3000004f0067f6ec");
+        LocationListViewModel locationListViewModel  = ViewModelProviders.of(this).get(LocationListViewModel.class);
+
+        locationListViewModel.getLocationList("5c261ccb3000004f0067f6ec");
+
     }
 
     @Override
