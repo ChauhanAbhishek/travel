@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:textSize="16sp"
             android:text="@{location.getPlace()}"
             android:textColor="#474c57"
@@ -84,14 +84,14 @@
 
         <ImageView
             android:id="@+id/back_image"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_baseline_keyboard_backspace_24px" />
+            app:srcCompat="@drawable/ic_baseline_arrow_back_24px" />
 
         <TextView
             android:id="@+id/book_now_text"

@@ -73,7 +73,6 @@ public class LocationListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public int getItemCount() {
 
-        Log.d("cnrr"," c " + locations.size());
         return locations.size();
     }
 
