@@ -3,14 +3,22 @@ package com.example.rup.models;
 
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+@Entity(tableName = "location_table")
 public class Location implements Serializable {
 
+
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "place")
     @SerializedName("place")
     @Expose
     private String place;

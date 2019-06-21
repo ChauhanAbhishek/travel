@@ -1,15 +1,22 @@
 package com.example.rup.repositories;
 
+import android.app.Application;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.room.Query;
 
 import com.example.rup.Event;
+import com.example.rup.dao.LocationDao;
+import com.example.rup.db.LocationRoomDatabase;
 import com.example.rup.models.Location;
 import com.example.rup.models.Travel;
 import com.example.rup.service.ApiService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Single;
@@ -25,14 +32,20 @@ public class LocationRepository {
 
     private MutableLiveData<Event<String>> toastMessage;
     private  MutableLiveData<Boolean> mIsDataLoadingError;
-    private MutableLiveData<List<Location>> mObservableLocationList;
+    private LiveData<List<Location>> mObservableLocationList;
     private MutableLiveData<String> customerName;
 
+    private LocationDao mLocationDao;
 
-    public LocationRepository(ApiService apiService)
+
+
+    public LocationRepository(ApiService apiService, Context context)
     {
         mApiService=apiService;
-        mObservableLocationList = new MutableLiveData<>();
+        LocationRoomDatabase db = LocationRoomDatabase.getDatabase(context);
+        mLocationDao = db.locationDao();
+        mObservableLocationList = mLocationDao.getAllLocations();
+       // mObservableLocationList = new MutableLiveData<>();
         mIsDataLoadingError = new MutableLiveData<>();
         toastMessage = new MutableLiveData<>();
         customerName = new MutableLiveData<>();
@@ -56,6 +69,10 @@ public class LocationRepository {
         return mIsDataLoadingError;
     }
 
+    public void insert (List<Location> word) {
+        new insertAsyncTask(mLocationDao).execute(word);
+    }
+
     public void getTravelLocations(String pageToken)
     {
         Single<Response<Travel>> travelResponse;
@@ -71,7 +88,9 @@ public class LocationRepository {
                     public void onSuccess(Response<Travel> response) {
                         if(response.isSuccessful()) {
                             //videoListAdapter.updateList(response.body().getItems());
-                            mObservableLocationList.setValue(response.body().getLocations());
+                            //mObservableLocationList.setValue(response.body().getLocations());
+
+                            insert(response.body().getLocations());
 
                             Log.d("cnrrrs",response.toString() + response.body().getCustName());
 
@@ -94,4 +113,22 @@ public class LocationRepository {
                     }
                 });
     }
+
+    private static class insertAsyncTask extends AsyncTask<List<Location>, Void, Void> {
+
+        private LocationDao mAsyncTaskDao;
+
+        insertAsyncTask(LocationDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final List<Location>... params) {
+            mAsyncTaskDao.insertAll(params[0]);
+           // mAsyncTaskDao.insertAll();
+            return null;
+        }
+    }
+
+
 }
