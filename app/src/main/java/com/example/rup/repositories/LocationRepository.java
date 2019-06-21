@@ -87,19 +87,11 @@ public class LocationRepository {
                     @Override
                     public void onSuccess(Response<Travel> response) {
                         if(response.isSuccessful()) {
-                            //videoListAdapter.updateList(response.body().getItems());
-                            //mObservableLocationList.setValue(response.body().getLocations());
-
                             bulkInsert(response.body().getLocations());
-
-                            Log.d("cnrrrs",response.toString() + response.body().getCustName());
-
                             customerName.setValue(response.body().getCustName());
-//                            viewModelNonUIChangesListener.setPurchaseToken(response.body().getNextPageToken());
-                            Log.d("cnrr",response.toString() + response.body());
                         } else {
                             //todo handle errors
-                            Log.d("cnrr","errrr");
+                            toastMessage.setValue(new Event<>("You are offline. Enjoy your cache."));
                         }
                     }
 
@@ -108,7 +100,6 @@ public class LocationRepository {
 //                        //todo handle errors
 //                        viewModelNonUIChangesListener.errorOccurred();
                         toastMessage.setValue(new Event<>("You are offline. Enjoy your cache."));
-                        Log.d("cnrre",e.toString());
 
                     }
                 });
@@ -125,7 +116,6 @@ public class LocationRepository {
         @Override
         protected Void doInBackground(final List<Location>... params) {
             mAsyncTaskDao.insertAll(params[0]);
-           // mAsyncTaskDao.insertAll();
             return null;
         }
     }

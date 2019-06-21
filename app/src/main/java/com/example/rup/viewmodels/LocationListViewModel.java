@@ -17,7 +17,6 @@ public class LocationListViewModel extends ViewModel {
 
     private LiveData<List<Location>> mObservableLocationList;
     private LiveData<String> mObservableCustomerName;
-    private String nextPageToken;
     private LiveData<Event<String>> toastMessage;
 
     boolean isReqSent = false;

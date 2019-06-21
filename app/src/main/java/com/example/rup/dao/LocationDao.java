@@ -8,7 +8,6 @@ import androidx.room.Query;
 
 import com.example.rup.models.Location;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao

@@ -26,7 +26,7 @@ public class LocationDetailActivity extends AppCompatActivity {
 
         Intent i = getIntent();
 
-        //change to
+        //CHANGE TO PARCEABLE BEFORE SENDING
         Location location = (Location)i.getSerializableExtra("location_object");
 
 

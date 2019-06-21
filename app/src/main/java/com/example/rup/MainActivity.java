@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements LocationOnClickLi
         toastMessage.observe(this, new Observer<Event<String>>() {
             @Override
             public void onChanged(@Nullable Event<String> event) {
-                Log.d("cnrrr","changed " + "event");
                 if(event!=null)
                 {
                     Toast.makeText(MainActivity.this,event.getContentIfNotHandled(),Toast.LENGTH_SHORT).show();
@@ -95,15 +94,8 @@ public class MainActivity extends AppCompatActivity implements LocationOnClickLi
                 {
                     return;
                 }
-//                if(req)
-//                {
-//                    Item item = new Item();
-//                    videoListAdapter.addItem(item);
-//                }
-//                else
-//                {
-//                    videoListAdapter.removeItem();
-//                }
+
+                //SHOW PROGRESS BAR HERE IF NEEDED WHILE THE REQ IS SENT
 
             }
         });
@@ -111,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements LocationOnClickLi
         customerName.observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String customerName) {
-                Log.d("cnrr","cust name " + customerName);
                 setName();
             }
         });
@@ -120,17 +111,8 @@ public class MainActivity extends AppCompatActivity implements LocationOnClickLi
 
         if(locationLiveData.getValue()==null)
         {
-            Log.d("cnrr","it is null");
             locationListViewModel.getLocationList("5c261ccb3000004f0067f6ec");
         }
-
-
-
-//
-//        LocationListViewModel locationListViewModel  = ViewModelProviders.of(this).get(LocationListViewModel.class);
-//
-//        locationListViewModel.getLocationList("");
-
     }
 
     @Override
@@ -148,12 +130,9 @@ public class MainActivity extends AppCompatActivity implements LocationOnClickLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -163,11 +142,8 @@ public class MainActivity extends AppCompatActivity implements LocationOnClickLi
 
     @Override
     public void openLocation(Location location) {
-
         Intent i = new Intent(this, LocationDetailActivity.class);
         i.putExtra("location_object", location);
-
         startActivity(i);
-
     }
 }
